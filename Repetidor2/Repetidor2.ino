@@ -52,7 +52,7 @@ bool init_comunicacao_lora(void)
 
   return status_init;
 }
- 
+
 /* Funcao de setup */
 void setup() 
 {
@@ -72,16 +72,18 @@ void loop()
     // Lê os bytes recebidos e os armazena em temperaturas
     int read = LoRa.readBytes((uint8_t *)temperaturas, sizeof(temperaturas));
 
-    if (temperaturas[8] == 3.0)
-    for(int i = 0; i < QTD_SENSORES; i++)
+    if(temperaturas[8] == 2.0)
     {
-      Serial.print("Posicao Vetor: ");
-      Serial.print(i);
-      Serial.print(" - Conteudo ");
-      Serial.println(temperaturas[i]);
-    }
+      temperaturas[8] = 3.0;
+      Serial.println("RECEBIDO - 2!");
+      Serial.println(temperaturas[8]);
+      Serial.println(temperaturas[9]);
 
-    Serial.println("----------");
+      temperaturas[9] = temperaturas[9] + 100; 
+      LoRa.beginPacket();
+      LoRa.write((uint8_t *)temperaturas, sizeof(temperaturas));
+      LoRa.endPacket();
+    }
   }
 }
 

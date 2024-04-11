@@ -35,7 +35,7 @@ OneWire oneWire(SENSOR_1);
 DallasTemperature sensors(&oneWire);
 
 /* Variaveis Globais*/
-float temperaturas[QTD_SENSORES] = {0,0,1.1, 2.2,3.3,4.4,5.5,6.6,7.7,0};
+float temperaturas[QTD_SENSORES] = {0,0,1.1, 2.2,3.3,4.4,5.5,6.6,1.0,0};
 float contador = 0;
 
 bool init_comunicacao_lora(void)
