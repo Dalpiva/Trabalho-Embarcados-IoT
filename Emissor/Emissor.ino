@@ -38,6 +38,9 @@ DallasTemperature sensors(&oneWire);
 float temperaturas[QTD_SENSORES] = {0,0,1.1, 2.2,3.3,4.4,5.5,6.6,1.0,0};
 float contador = 0;
 
+DeviceAddress sensor1 = { 0x28, 0xFF, 0x64, 0x18, 0x99, 0x20, 0xF5, 0x4E };
+DeviceAddress sensor2 = { 0x28, 0xFF, 0x64, 0x18, 0x99, 0xE , 0xB2, 0x96 };
+
 bool init_comunicacao_lora(void)
 {
   bool status_init = false;
@@ -66,19 +69,12 @@ bool init_comunicacao_lora(void)
 void setup() 
 {    
   Serial.begin(DEBUG_SERIAL_BAUDRATE);
-  sensors.begin();
   while (!Serial);
-
-  sensors.requestTemperatures(); 
-  float temperatureC = sensors.getTempCByIndex(0);
-  float temperatureF = sensors.getTempFByIndex(0);
-  Serial.print(temperatureC);
-  Serial.println("ºC");
-  Serial.print(temperatureF);
-  Serial.println("ºF");
 
   /* Tenta, até obter sucesso, comunicacao com o chip LoRa */
   while(init_comunicacao_lora() == false);       
+
+  sensors.begin();
 }
  
 /* Programa principal */
@@ -88,8 +84,14 @@ void loop()
   sensors.requestTemperatures(); 
 
   // Adiciona as temperaturas no vetor de envio
-  temperaturas[0] = sensors.getTempCByIndex(0);
-  temperaturas[1] = sensors.getTempFByIndex(0);
+  /*temperaturas[0] = sensors.getTempCByIndex(0);
+  temperaturas[1] = sensors.getTempFByIndex(0);*/
+
+  temperaturas[0] = sensors.getTempC(sensor1);
+  temperaturas[1] = sensors.getTempF(sensor1);
+  temperaturas[2] = sensors.getTempC(sensor2);
+  temperaturas[3] = sensors.getTempF(sensor2);
+
   temperaturas[9] = contador;
   contador++;
 

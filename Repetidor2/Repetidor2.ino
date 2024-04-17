@@ -79,7 +79,7 @@ void loop()
       Serial.println(temperaturas[8]);
       Serial.println(temperaturas[9]);
 
-      temperaturas[9] = temperaturas[9] + 100; 
+      temperaturas[9] = temperaturas[9] + 100;         
       LoRa.beginPacket();
       LoRa.write((uint8_t *)temperaturas, sizeof(temperaturas));
       LoRa.endPacket();
