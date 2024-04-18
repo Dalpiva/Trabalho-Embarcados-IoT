@@ -67,18 +67,20 @@ void setup()
 void loop() 
 {
   int packet_size = LoRa.parsePacket();
-  if (packet_size > 0) 
+  if (packet_size != 0) 
   {
     // Lê os bytes recebidos e os armazena em temperaturas
     int read = LoRa.readBytes((uint8_t *)temperaturas, sizeof(temperaturas));
 
     if (temperaturas[8] == 3.0)
-    for(int i = 0; i < QTD_SENSORES; i++)
     {
-      Serial.print("Posicao Vetor: ");
-      Serial.print(i);
-      Serial.print(" - Conteudo ");
-      Serial.println(temperaturas[i]);
+      for(int i = 0; i < QTD_SENSORES; i++)
+      {
+        Serial.print("Posicao Vetor: ");
+        Serial.print(i);
+        Serial.print(" - Conteudo ");
+        Serial.println(temperaturas[i]);
+      }
     }
 
     Serial.println("----------");

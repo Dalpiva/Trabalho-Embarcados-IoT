@@ -16,7 +16,7 @@
 #define BAND                900E6  /* 915MHz de frequencia */
 
 #define SENSOR_1            4
-#define QTD_SENSORES        10
+#define QTD_SENSORES        10 + 2
 
 /* Definicoes gerais */
 #define DEBUG_SERIAL_BAUDRATE    115200
@@ -35,8 +35,9 @@ OneWire oneWire(SENSOR_1);
 DallasTemperature sensors(&oneWire);
 
 /* Variaveis Globais*/
-float temperaturas[QTD_SENSORES] = {0,0,1.1, 2.2,3.3,4.4,5.5,6.6,1.0,0};
-float contador = 0;
+
+// QTD SENSORES + ID + RATO OU PEIXE
+float pacote[QTD_SENSORES + 2];
 
 DeviceAddress sensor1 = { 0x28, 0xFF, 0x64, 0x18, 0x99, 0x20, 0xF5, 0x4E };
 DeviceAddress sensor2 = { 0x28, 0xFF, 0x64, 0x18, 0x99, 0xE , 0xB2, 0x96 };
@@ -87,23 +88,23 @@ void loop()
   /*temperaturas[0] = sensors.getTempCByIndex(0);
   temperaturas[1] = sensors.getTempFByIndex(0);*/
 
-  temperaturas[0] = sensors.getTempC(sensor1);
-  temperaturas[1] = sensors.getTempF(sensor1);
-  temperaturas[2] = sensors.getTempC(sensor2);
-  temperaturas[3] = sensors.getTempF(sensor2);
+  pacote[0] = 1.0; // ID DO BIOTERIO
+  pacote[1] = 0.0; // ID 0 = PEIXE // 1 = RATO
 
-  temperaturas[9] = contador;
-  contador++;
+  pacote[2] = sensors.getTempC(sensor1);
+  pacote[3] = sensors.getTempC(sensor2);
+  pacote[4] = sensors.getTempF(sensor1);
+  pacote[5] = sensors.getTempF(sensor2);
 
   // Envia os dados
   LoRa.beginPacket();
-  LoRa.write((uint8_t *)temperaturas, sizeof(temperaturas));
+  LoRa.write((uint8_t *)pacote, sizeof(pacote));
   LoRa.endPacket();
 
   // Printa na tela os dados
-  for(int i = 0; i < QTD_SENSORES; i++)
+  for(int i = 0; i < QTD_SENSORES ; i++)
   {
-    Serial.println(temperaturas[i]);
+    Serial.println(pacote[i]);
   }
   Serial.println("----------");
 
