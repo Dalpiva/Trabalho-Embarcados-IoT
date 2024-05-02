@@ -16,7 +16,7 @@
 /* Definicoes gerais */
 #define DEBUG_SERIAL_BAUDRATE    115200
 
-#define QTD_SENSORES        10
+#define QTD_SENSORES        12
  
 /* Local prototypes */
 void display_init(void);
@@ -72,18 +72,21 @@ void loop()
     // Lê os bytes recebidos e os armazena em temperaturas
     int read = LoRa.readBytes((uint8_t *)temperaturas, sizeof(temperaturas));
 
-    if (temperaturas[8] == 3.0)
+    if (temperaturas[0] == 1.0)
     {
       for(int i = 0; i < QTD_SENSORES; i++)
       {
-        Serial.print("Posicao Vetor: ");
-        Serial.print(i);
-        Serial.print(" - Conteudo ");
+        Serial.print("Temperatura: ");
         Serial.println(temperaturas[i]);
+        
       }
+      Serial.println("----------");
     }
 
-    Serial.println("----------");
+    if (temperaturas[0] == 10.0)  
+    {
+      Serial.println("Backup");
+    } 
   }
 }
 
