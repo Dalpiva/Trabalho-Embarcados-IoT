@@ -7,19 +7,21 @@
 
 #define QTD_SENSORES 10
 
-// Replace with your network credentials
-const char* ssid     = "carlos vieira";
-const char* password = "jonathan";
-const char* mqttServer = "mqtt.tago.io";
-const int mqttPort = 1883;
+// Credenciais da rede
+const char* ssid     = "carlos vieira"; // nome da rede
+const char* password = "jonathan"; // senha da rede
+const char* mqttServer = "mqtt.tago.io"; // padrão do tago
+const int mqttPort = 1883; 
 const char* mqttUser = "jonathan";
 const char* mqttPassword = "a28a9f08-0be5-4dcc-a2ce-91c9f1089b83";
 
-char dado[9];
-char temperatura[90];
+float pacote[QTD_SENSORES + 2];
+char pacoteEnvio[50];
+char temperatura[20];
+String dadoString;
+
 WiFiClient espClient;
 PubSubClient client(espClient);
-float pacote[QTD_SENSORES + 2];
 
 void setup()
 {
@@ -78,12 +80,14 @@ void loop()
     {
       for(int i = 0; i < QTD_SENSORES + 2 ; i++)
       {
-        client.loop();
-        sprintf(dado,"t%d = %.2f", i, pacote[i]);
-        client.publish("topic",dado);
-        Serial.println(dado);
-        delay(3000);
+        sprintf(temperatura, "t%d = %.2f, ", i, pacote[i]);
+        strcat(pacoteEnvio, temperatura);
       }
+
+      client.loop();
+      client.publish("topic", pacoteEnvio);
+      Serial.println(pacoteEnvio);
+      delay(3000);
     }
   }
 }
