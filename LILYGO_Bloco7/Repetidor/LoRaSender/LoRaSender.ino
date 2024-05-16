@@ -16,8 +16,8 @@ const char* mqttUser = "jonathan";
 const char* mqttPassword = "a28a9f08-0be5-4dcc-a2ce-91c9f1089b83";
 
 float pacote[QTD_SENSORES + 2];
-char pacoteEnvio[50];
-char temperatura[20];
+char pacoteEnvio[100];
+char temperatura[100];
 String dadoString;
 
 WiFiClient espClient;
@@ -83,13 +83,16 @@ void loop()
         sprintf(temperatura, "t%d = %.2f, ", i, pacote[i]);
         strcat(pacoteEnvio, temperatura);
       }
-
+      client.connect("ESP32Client", mqttUser, mqttPassword );
       client.loop();
       client.publish("topic", pacoteEnvio);
       Serial.println(pacoteEnvio);
       delay(3000);
     }
+    packet_size = 0;
+    read = 0;
+    memset(temperatura, 0, sizeof(temperatura));
+    memset(pacoteEnvio, 0, sizeof(pacoteEnvio));
   }
 }
-
 
